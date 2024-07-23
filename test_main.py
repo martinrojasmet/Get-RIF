@@ -3,12 +3,14 @@ from playwright.sync_api import Playwright, sync_playwright, expect
 import easyocr
 import requests
 import cv2
+import pytesseract
+import numpy as np
 
 base_url = "http://contribuyente.seniat.gob.ve/BuscaRif/"
 
 def run(playwright: Playwright) -> None:
     # Go to page
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(headless=False)
 
     context = browser.new_context()
     context.set_default_timeout(15000)
@@ -26,8 +28,12 @@ def run(playwright: Playwright) -> None:
 
     # Modify Image
     image = cv2.imread("tmp/captcha.jpg", 0)
-    image = cv2.blur(image, (2, 3))
-    ret, image = cv2.threshold(image, 128, 200, cv2.THRESH_BINARY)
+    image = cv2.normalize(image, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
+    image = cv2.GaussianBlur(image,(1,3),0)
+    umbral = 0.5 * 255
+    ret, image = cv2.threshold(image, umbral, 255, cv2.THRESH_BINARY)
+    image = cv2.dilate(image, np.ones((2, 2), np.uint8))
+    image = cv2.bitwise_not(image)
     cv2.imwrite("tmp/captcha-fixed.jpg", image)
 
     # Read Image
