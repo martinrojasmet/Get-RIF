@@ -153,6 +153,8 @@ cython_debug/
 
 # Temp
 tmp/*
+!tmp/captcha.jpg
+!tmp/captcha-fixed.jpg
 
 # Utils
 utils/cookies.json
