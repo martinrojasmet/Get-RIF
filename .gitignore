@@ -152,9 +152,10 @@ cython_debug/
 #.idea/
 
 # Temp
-tmp
+tmp/
 
 # Utils
+utils/cookies.json
 utils/html_seniat.html
 utils/screenshot_text1.png
 utils/screenshot_text2.png
