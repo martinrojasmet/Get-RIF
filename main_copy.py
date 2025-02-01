@@ -64,7 +64,7 @@ def run_bot(playwright: Playwright, rif, id) -> None:
     attempts = 1
 
     # Go to page
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
 
     context = browser.new_context()
     context.set_default_timeout(60000)
@@ -175,17 +175,13 @@ def run():
     print("Excel read")
 
     for index, row in df.iterrows():
-        # print(row)
+        print("------------")
         rif = row['RIF']
         print(rif)
         try:
             cedula = str(int(row['CÉDULA O PASAPORTE']))
         except Exception as e:
-            print(e)
             cedula = None
-
-        print(rif)
-        print(cedula)
 
         rif_exists = pd.notna(rif)
         cedula_exists = pd.notna(cedula)
@@ -195,24 +191,21 @@ def run():
         retention_percentage = ""
         message = ""
 
-        if rif_exists or cedula_exists:
-            if not rif_exists:
-                rif = ""
-            else:
-                if not check_format_rif(rif):
-                    print(f"The RIF {rif} does not have the correct format")
-                    continue
-            if not cedula_exists:
-                cedula = ""
+        if not rif_exists:
+            print("RIF does not exists")
+            continue
+        else:
+            if not check_format_rif(rif):
+                print(f"The RIF {rif} does not have the correct format")
+                continue
+        if not cedula_exists:
+            cedula = ""
 
-            with sync_playwright() as playwright:
-                name, details, retention_percentage, attempts, message = run_bot(playwright, rif, cedula)
-            # print("corrio")
+        with sync_playwright() as playwright:
+            name, details, retention_percentage, attempts, message = run_bot(playwright, rif, cedula)
 
-            set_values_xlsx(row.name+2, name, details, retention_percentage, message, attempts)
-            print("Values set in the excel file")
-
-            print(name, details, retention_percentage, message, attempts)
+        set_values_xlsx(row.name+2, name, details, retention_percentage, message, attempts)
+        print("Values set in the excel file")
 
     send_notification("Get RIF", "El bot terminó su ejecución de manera correcta", "check")
 
