@@ -55,8 +55,6 @@ class GUI:
                     break
             
             wb.close()
-            print("file headers")
-            print(result)
             return result
 
         def file_not_empty(file_path):
