@@ -168,48 +168,40 @@ def send_notification(title, message, icon_name=None):
 
     notification.send()
 
-def run():
-    send_notification("Get RIF", "El bot inició su ejecución")
+# def run():
+#     send_notification("Get RIF", "El bot inició su ejecución")
 
-    df = pd.read_excel(file_path)
-    print("Excel read")
+#     df = pd.read_excel(file_path)
+#     print("Excel read")
 
-    for index, row in df.iterrows():
-        print("------------")
-        rif = row['RIF']
-        print(rif)
-        try:
-            cedula = str(int(row['CÉDULA O PASAPORTE']))
-        except Exception as e:
-            cedula = None
+#     for index, row in df.iterrows():
+#         rif = row['RIF']
+#         cedula = str(row['CÉDULA O PASAPORTE'])
 
-        rif_exists = pd.notna(rif)
-        cedula_exists = pd.notna(cedula)
+#         name = ""
+#         details = ""
+#         retention_percentage = ""
+#         message = ""
 
-        name = ""
-        details = ""
-        retention_percentage = ""
-        message = ""
+#         print(f"Bot with RIF started: {rif}")
+#         if check_format_rif(rif):
+#             if pd.isna(row['CÉDULA O PASAPORTE']):
+#                 cedula = ""
+#                 with sync_playwright() as playwright:
+#                     name, details, retention_percentage, attempts, message = run_bot(playwright, rif, cedula)
+#             else:
+#                 with sync_playwright() as playwright:
+#                     name, details, retention_percentage, attempts, message = run_bot(playwright, rif, cedula)
+#         else:
+#             message = "REVISAR: El formato del RIF esta incorrecto"
+#         print(f"Bot with RIF finished: {rif}")
 
-        if not rif_exists:
-            print("RIF does not exists")
-            continue
-        else:
-            if not check_format_rif(rif):
-                print(f"The RIF {rif} does not have the correct format")
-                continue
-        if not cedula_exists:
-            cedula = ""
+#         set_values_xlsx(row.name+2, name, details, retention_percentage, message, attempts)
+#         print("Values set in the excel file")
 
-        with sync_playwright() as playwright:
-            name, details, retention_percentage, attempts, message = run_bot(playwright, rif, cedula)
+#     send_notification("Get RIF", "El bot terminó su ejecución de manera correcta", "check")
 
-        set_values_xlsx(row.name+2, name, details, retention_percentage, message, attempts)
-        print("Values set in the excel file")
-
-    send_notification("Get RIF", "El bot terminó su ejecución de manera correcta", "check")
-
-try:
-    run()
-except:
-    send_notification("Get RIF", "Ocurrió un error", "check")
+# try:
+#     run()
+# except:
+#     send_notification("Get RIF", "Ocurrió un error", "check")
