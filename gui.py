@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import filedialog
 import tkinter as tk
-from PIL import  ImageTk
+from PIL import Image,ImageTk
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill, Font, Alignment
 import pandas as pd
@@ -50,6 +50,17 @@ class GUI:
                 y=(button_height // 2) + 25,
                 anchor='center',
                 height=15
+            )
+
+        def adjust_info_position(event):
+            width = self.root.winfo_width()
+            height = self.root.winfo_height()
+
+            
+            self.info_button.place(
+                x=width - 25,
+                y=26,
+                anchor='center'
             )
 
         def create_xlsx_file(folder_path):
@@ -129,6 +140,46 @@ class GUI:
                 print(e)
                 self.upload_label.config(text="Error creating xlsx file", fg=alert_text_color)
 
+        def show_legend():
+            # Create new window
+            legend_window = tk.Toplevel(self.root)
+            legend_window.title("Icon Legend")
+            legend_window.configure(bg=background_color)
+            
+            # Create container frame
+            legend_frame = tk.Frame(legend_window, bg=background_color)
+            legend_frame.pack(padx=20, pady=20)
+
+            # List of icon/text pairs
+            legend_items = [
+                ("./utils/icons/document_icon.png", """It creates an .xlsx file with the format
+to run the program"""),
+                ("./utils/icons/upload_icon.png", """You can upload the file that you want 
+to process with the program"""),
+                ("./utils/icons/info_icon.png", """The status is in the text below the upload
+button, but you can visualize it in the
+progress bar""")
+            ]
+
+            legend_window.legend_images = []  # 1. Attach to window object
+
+            for row, (icon_path, text) in enumerate(legend_items):
+                try: 
+                    img = Image.open(icon_path)
+                    img = img.resize((32, 32), Image.LANCZOS)
+                    photo_img = ImageTk.PhotoImage(img)
+                    legend_window.legend_images.append(photo_img)
+
+                    icon_label = tk.Label(legend_frame, image=photo_img, bg=background_color)
+                    icon_label.grid(row=row, column=0, padx=5, pady=5, sticky="w")
+
+                    text_label = tk.Label(legend_frame, text=text, bg=background_color, 
+                                        fg=text_color, font=("Arial", 10), justify=LEFT)
+                    text_label.grid(row=row, column=1, padx=5, pady=5, sticky="w")
+                    
+                except Exception as e:
+                    print(f"Error loading {icon_path}: {str(e)}")
+
         def calculate_progress(index, length):
             value = int((index + 1 / length) * 100)
             if value > 100:
@@ -203,6 +254,15 @@ class GUI:
         self.document_button.pack()
         self.document_button.place(x=25, y=26, anchor=CENTER)
 
+        img = Image.open("./utils/icons/info_icon.png")
+        img = img.resize((30, 30), Image.LANCZOS)  # Adjust size as needed (width, height)
+        self.info_icon = ImageTk.PhotoImage(img)
+        self.info_button = tk.Button(self.root, image=self.info_icon, bg=background_color, border=0, 
+                                        borderwidth=0, highlightthickness=0, activeforeground=background_color,
+                                        activebackground=background_color, command=show_legend)
+        self.info_button.pack()
+        self.info_button.bind('<Configure>', adjust_info_position)
+
         self.get_rif_title = tk.Label(text="get RIF", fg=title_text_color, font=("Arial", 30))
         self.get_rif_title.configure(bg=background_color)
         self.get_rif_title.place(relx=0.5, y=40, anchor=CENTER)
@@ -230,5 +290,8 @@ class GUI:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    # ico = Image.open('test.jpg')
+    # photo = ImageTk.PhotoImage(ico)
+    # root.wm_iconphoto(False, photo)
     gui = GUI(root)
     root.mainloop()
