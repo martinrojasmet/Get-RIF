@@ -263,7 +263,7 @@ progress bar""")
         self.info_button.pack()
         self.info_button.bind('<Configure>', adjust_info_position)
 
-        self.get_rif_title = tk.Label(text="get RIF", fg=title_text_color, font=("Arial", 30))
+        self.get_rif_title = tk.Label(text="gRIF", fg=title_text_color, font=("Arial", 30))
         self.get_rif_title.configure(bg=background_color)
         self.get_rif_title.place(relx=0.5, y=40, anchor=CENTER)
 
@@ -290,8 +290,9 @@ progress bar""")
 
 if __name__ == "__main__":
     root = tk.Tk()
-    # ico = Image.open('test.jpg')
-    # photo = ImageTk.PhotoImage(ico)
-    # root.wm_iconphoto(False, photo)
+    root.title("gRIF")
+    ico = Image.open('./utils/icons/gRIF.png')
+    photo = ImageTk.PhotoImage(ico)
+    root.wm_iconphoto(False, photo)
     gui = GUI(root)
     root.mainloop()
