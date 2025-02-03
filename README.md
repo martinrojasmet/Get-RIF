@@ -3,7 +3,7 @@ In Venezuela, individuals and companies with economic activity are assigned a un
 
 This tool combines Playwright (for browser automation), EasyOCR (for CAPTCHA solving), and Tkinter (for interface design) to enable efficient mass queries via a desktop interface. Designed for Venezuelan users in mind, gRIF is handled with a common and familiar tool in Excel, also allowing the seamless copy-paste between spreadsheets, reducing the repetitive and manual effort involved.
 
-![gRIF](https://github.com/martinrojasmet/gRIF/tree/main/utils/gRIF.png)
+![gRIF](https://github.com/martinrojasmet/gRIF/raw/main/utils/gRIF.png)
 
 **Requirements**
 - pandas
